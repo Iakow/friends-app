@@ -164,9 +164,6 @@ button {
   .search-container {
     flex-grow: 1;
   }
-  .sort-age-container, .sort-name-container, .filter-sex-container {
-    /* min-width: 50px; */
-  }
   .sort-age, .sort-name, .filter-sex {
     height: 30px;
     width: 50px;
@@ -226,6 +223,6 @@ button {
     margin: 2px;
   }
   .search-container {
-    padding:1%;
+    padding: 1%;
   }
 }
