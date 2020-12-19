@@ -19,7 +19,7 @@ function mountCards() {
 
   
   for (let i = 1; i <= 20; i++) {
-    const card = document.createElement('div');
+    const card = document.createElement('li');
     card.className = 'card';
     fragment.append(card);
   }

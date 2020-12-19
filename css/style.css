@@ -9,6 +9,10 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+ul {
+	list-style: none;
+}
+
 .app-container {
   display: grid;
   grid-template-areas: "header header" "aside main";
