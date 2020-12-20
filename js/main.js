@@ -1,6 +1,6 @@
 'use strict';
 
-const cardsAmount = 200;
+const cardsAmount = 20;
 const allCardElements = [];
 
 (function mountPlaceHolders() {
@@ -35,6 +35,7 @@ fetch(`https://randomuser.me/api/?results=${cardsAmount}`)
   .then(response => response.json())
   .then(response => {
     const users = response.results;
+    console.log(users[0])
 
     /* строим allCardElements */
     users.forEach((userData, index) => {
@@ -58,42 +59,92 @@ fetch(`https://randomuser.me/api/?results=${cardsAmount}`)
     mountCards(allCardElements);
   });
 
-function sortByAge() {
-  const newArr = [...allCardElements].sort((user1, user2) => {
-    //return user1.userData.dob.age - user2.userData.dob.age // это по возрастающей
-    return user2.userData.dob.age - user1.userData.dob.age // это по убывающей
-  })
-
-  mountCards(newArr);
-}
 
 const selection = {
   ageSorting: 0,
+  nameSorting: 0,
+  genderFiltering: 0,
 
-  sortByAge() {
-    let sortFunc;
-    if (selection.ageSorting === 0) {
-      selection.ageSorting = 1;
-      sortFunc = (user1, user2) => +user2.userData.dob.age - +user1.userData.dob.age;
-    } else if (selection.ageSorting === 1) {
-      selection.ageSorting = -1;
-      sortFunc = (user1, user2) => +user1.userData.dob.age - +user2.userData.dob.age;
-    } else {
-      selection.ageSorting = 0;
-      sortFunc = (user1, user2) => 0;
+  applyFilters() {
+    const filteredArr = [...allCardElements]
+      .sort(selection.sortByAge)
+      .sort(selection.sortByName)
+      .filter(selection.filterBySex);
+
+    mountCards(filteredArr);
+    console.log(selection)
+  },
+
+  sortByAge(user1, user2) {
+    if (selection.ageSorting === 1) {
+      return +user2.userData.dob.age - +user1.userData.dob.age;
+    } else if (selection.ageSorting === -1) {
+      return +user1.userData.dob.age - +user2.userData.dob.age;
+    } else if (selection.ageSorting === 0) {
+      return 0;
     }
+  },
 
-    const newArr = [...allCardElements].sort(sortFunc);
+  sortByName(user1, user2) {
+    if (selection.nameSorting === 1) {
+      if (user1.userData.name.first > user2.userData.name.first) return 1;
+      if (user1.userData.name.first < user2.userData.name.first) return -1;
+      if (user1.userData.name.first === user2.userData.name.first) return 0;
+    } else if (selection.nameSorting === -1) {
+      if (user1.userData.name.first < user2.userData.name.first) return 1;
+      if (user1.userData.name.first > user2.userData.name.first) return -1;
+      if (user1.userData.name.first === user2.userData.name.first) return 0;
+    } else if (selection.nameSorting === 0) {
+      return 0;
+    }
+  },
 
-    mountCards(newArr);
-    console.log(selection.ageSorting)
+  filterBySex(user) {
+    if (selection.genderFiltering === 1) {
+      return user.userData.gender === 'male';
+    } else if (selection.genderFiltering === -1) {
+      return user.userData.gender === 'female';
+    } else if (selection.genderFiltering === 0) {
+      return true;
+    }
   }
 }
 
-document.querySelector('#sort-age').addEventListener('click', selection.sortByAge);
+document.querySelector('#sort-age').addEventListener('click', () => {
+  selection.nameSorting = 0;
 
-/* ок, далее. Где хранить данные сортировок и фильтров?
-   Думал о замыкании, но сортировка по имени должна ж сбрасывать сортировку по возрасту
-   поэтому они должны храниться в одном месте.
-   В объекте?
-*/
+  if (selection.ageSorting === 0) {
+    selection.ageSorting = 1;
+  } else if (selection.ageSorting === 1) {
+    selection.ageSorting = -1;
+  } else if (selection.ageSorting === -1) {
+    selection.ageSorting = 0;
+  }
+
+  selection.applyFilters();
+});
+
+document.querySelector('#filter-sex').addEventListener('click', () => {
+  if (selection.genderFiltering === 0) {
+    selection.genderFiltering = 1;
+  } else if (selection.genderFiltering === 1) {
+    selection.genderFiltering = -1;
+  } else if (selection.genderFiltering === -1) {
+    selection.genderFiltering = 0;
+  }
+
+  selection.applyFilters();
+})
+
+document.querySelector('#sort-name').addEventListener('click', () => {
+  selection.ageSorting = 0;
+  if (selection.nameSorting === 0) {
+    selection.nameSorting = 1;
+  } else if (selection.nameSorting === 1) {
+    selection.nameSorting = -1;
+  } else if (selection.nameSorting === -1) {
+    selection.nameSorting = 0;
+  }
+
+  selection.applyFilters();
+})
