@@ -1,6 +1,6 @@
 'use strict';
 
-const cardsAmount = 200;
+const cardsAmount = 100;
 const allCardElements = [];
 
 (function mountPlaceHolders() {
@@ -19,28 +19,25 @@ const allCardElements = [];
 
 
 
-
-
-
 /* монтируеум из allCardElements */
 function mountCards(arr) {
   const mountPoint = document.querySelector('.main-container');
   /* очищаем main-container */
-  mountPoint.innerHTML = '';
   const fragment = document.createDocumentFragment();
-
+  
   arr.forEach(cardEl => {
     fragment.append(cardEl);
   })
-
+  
+  mountPoint.innerHTML = '';
   mountPoint.append(fragment)
 }
 
+/* запрашиваем данные и перестраиваем */
 fetch(`https://randomuser.me/api/?results=${cardsAmount}`)
   .then(response => response.json())
   .then(response => {
     const users = response.results;
-    console.log(users[0])
 
     /* строим allCardElements */
     users.forEach((userData, index) => {
@@ -63,11 +60,6 @@ fetch(`https://randomuser.me/api/?results=${cardsAmount}`)
 
     mountCards(allCardElements);
   });
-
-
-
-
-
 
 
 const filterNameInpt = document.querySelector('#filter-name');
@@ -139,21 +131,35 @@ sortNameInpt.addEventListener('click', (e) => {
 
 resetInpt.addEventListener('click', () => {
   resetInpt.disabled = true;
-  reset();
+  resetFilters();
   mountCards(allCardElements);
 })
 
+
+/*
+    Плохо, что каждый раз срабатывает 5 циклов
+    А как иначе?
+    Лушче бы при каждом клике воздействовать на некий глобальный массив
+    
+    Еще можно бы попытаться сохранять какие-то массивы.
+    У меня есть две взаимоисключащие сортирвоки и фильтрация по полу - это комбинации можно было бы построить заранее. Но это пиздец как сложно.
+
+    Возможно, если перемонтировать по одной карте, на телефоне все было бы плавнее.
+    Может быть даже как-то асинхронно.
+    Ведь на самом деле ж мне надо в первую очередь перестроить то, что на экране.
+*/
+
 function applyFilters() {
-  
   const filteredArr = [...allCardElements]
-  .filter(filterByName)
-  .filter(filterByAge)
-  .filter(filterBySex)
-  .sort(sortByAge)
-  .sort(sortByName)
-  
+    .filter(filterByName)
+    .filter(filterByAge)
+    .filter(filterBySex)
+    .sort(sortByAge)
+    .sort(sortByName)
+
   if (JSON.stringify(allCardElements) === JSON.stringify(filteredArr)) resetInpt.disabled = true
   else resetInpt.disabled = false;
+  
 
   mountCards(filteredArr);
 
@@ -219,7 +225,7 @@ function applyFilters() {
   }
 }
 
-function reset() {
+function resetFilters() {
   filterNameInpt.value = '';
   filterAgeMinInpt.value = '';
   filterAgeMaxInpt.value = '';
