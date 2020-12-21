@@ -1,6 +1,6 @@
 'use strict';
 
-const cardsAmount = 1000;
+const cardsAmount = 2000;
 const allCardElements = [];
 
 (function mountPlaceHolders() {
@@ -135,6 +135,9 @@ resetInpt.addEventListener('click', () => {
   mountCards(allCardElements);
 })
 
+let sum = 0;
+let count = 0;
+
 function applyFilters() {
   const start = performance.now();
 
@@ -145,8 +148,8 @@ function applyFilters() {
     .sort(sortByAge)
     .sort(sortByName)
 
-  if (JSON.stringify(allCardElements) === JSON.stringify(filteredArr)) resetInpt.disabled = true
-  else resetInpt.disabled = false;
+  /* if (JSON.stringify(allCardElements) === JSON.stringify(filteredArr)) resetInpt.disabled = true
+  else resetInpt.disabled = false; */
   
   
   mountCards(filteredArr);
@@ -215,7 +218,10 @@ function applyFilters() {
   }
 
   const end = performance.now();
-  console.log(end - start);
+  const value = end - start;
+  sum += value;
+  count++;
+  console.log(`count: ${count}, avarage: ${Math.round(sum/count)}`)
 }
 
 function resetFilters() {
