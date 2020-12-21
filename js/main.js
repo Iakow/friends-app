@@ -135,21 +135,9 @@ resetInpt.addEventListener('click', () => {
   mountCards(allCardElements);
 })
 
-
-/*
-    Плохо, что каждый раз срабатывает 5 циклов
-    А как иначе?
-    Лушче бы при каждом клике воздействовать на некий глобальный массив
-    
-    Еще можно бы попытаться сохранять какие-то массивы.
-    У меня есть две взаимоисключащие сортирвоки и фильтрация по полу - это комбинации можно было бы построить заранее. Но это пиздец как сложно.
-
-    Возможно, если перемонтировать по одной карте, на телефоне все было бы плавнее.
-    Может быть даже как-то асинхронно.
-    Ведь на самом деле ж мне надо в первую очередь перестроить то, что на экране.
-*/
-
 function applyFilters() {
+  const start = performance.now();
+
   const filteredArr = [...allCardElements]
     .filter(filterByName)
     .filter(filterByAge)
@@ -160,15 +148,17 @@ function applyFilters() {
   if (JSON.stringify(allCardElements) === JSON.stringify(filteredArr)) resetInpt.disabled = true
   else resetInpt.disabled = false;
   
-
+  
   mountCards(filteredArr);
-
+  
+  
   function filterByName(user) {
     const firstName = user.userData.name.first.toLowerCase();
     const lastName = user.userData.name.last.toLowerCase();
     const input = filterNameInpt.value.toLowerCase();
-
+    
     return (firstName.startsWith(input) || lastName.toLowerCase().startsWith(input));
+    
   }
 
   function filterByAge(user) {
@@ -223,6 +213,9 @@ function applyFilters() {
       return 0;
     }
   }
+
+  const end = performance.now();
+  alert(end - start);
 }
 
 function resetFilters() {
