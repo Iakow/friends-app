@@ -1,6 +1,6 @@
 'use strict';
 
-const cardsAmount = 100;
+const cardsAmount = 1000;
 const allCardElements = [];
 
 (function mountPlaceHolders() {
@@ -215,7 +215,7 @@ function applyFilters() {
   }
 
   const end = performance.now();
-  alert(end - start);
+  console.log(end - start);
 }
 
 function resetFilters() {
