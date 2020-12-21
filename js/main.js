@@ -1,6 +1,6 @@
 'use strict';
 
-const cardsAmount = 20;
+const cardsAmount = 200;
 const allCardElements = [];
 
 (function mountPlaceHolders() {
@@ -16,6 +16,11 @@ const allCardElements = [];
 
   mountPoint.append(fragment);
 })();
+
+
+
+
+
 
 /* монтируеум из allCardElements */
 function mountCards(arr) {
@@ -60,91 +65,165 @@ fetch(`https://randomuser.me/api/?results=${cardsAmount}`)
   });
 
 
-const selection = {
-  ageSorting: 0,
-  nameSorting: 0,
-  genderFiltering: 0,
 
-  applyFilters() {
-    const filteredArr = [...allCardElements]
-      .sort(selection.sortByAge)
-      .sort(selection.sortByName)
-      .filter(selection.filterBySex);
 
-    mountCards(filteredArr);
-    console.log(selection)
-  },
 
-  sortByAge(user1, user2) {
-    if (selection.ageSorting === 1) {
-      return +user2.userData.dob.age - +user1.userData.dob.age;
-    } else if (selection.ageSorting === -1) {
-      return +user1.userData.dob.age - +user2.userData.dob.age;
-    } else if (selection.ageSorting === 0) {
-      return 0;
-    }
-  },
 
-  sortByName(user1, user2) {
-    if (selection.nameSorting === 1) {
-      if (user1.userData.name.first > user2.userData.name.first) return 1;
-      if (user1.userData.name.first < user2.userData.name.first) return -1;
-      if (user1.userData.name.first === user2.userData.name.first) return 0;
-    } else if (selection.nameSorting === -1) {
-      if (user1.userData.name.first < user2.userData.name.first) return 1;
-      if (user1.userData.name.first > user2.userData.name.first) return -1;
-      if (user1.userData.name.first === user2.userData.name.first) return 0;
-    } else if (selection.nameSorting === 0) {
-      return 0;
-    }
-  },
 
-  filterBySex(user) {
-    if (selection.genderFiltering === 1) {
+const filterNameInpt = document.querySelector('#filter-name');
+const filterAgeMinInpt = document.querySelector('#filter-age-min');
+const filterAgeMaxInpt = document.querySelector('#filter-age-max');
+const filterGenderInpt = document.querySelector('#filter-sex');
+const sortAgeInpt = document.querySelector('#sort-age');
+const sortNameInpt = document.querySelector('#sort-name');
+const resetInpt = document.querySelector('#reset');
+
+filterNameInpt.addEventListener('input', () => {
+  filterNameInpt.value = filterNameInpt.value.trim();
+  applyFilters();
+});
+
+filterAgeMinInpt.addEventListener('input', e => {
+  if (e.target.value === '0') e.target.value = '';
+  applyFilters();
+})
+
+filterAgeMaxInpt.addEventListener('input', e => {
+  if (e.target.value === '0') e.target.value = '';
+  applyFilters();
+})
+
+filterGenderInpt.addEventListener('click', () => {
+  const value = filterGenderInpt.value;
+
+  if (!value) {
+    filterGenderInpt.value = 'female'
+  } else if (value === 'female') {
+    filterGenderInpt.value = 'male'
+  } else if (value === 'male') {
+    filterGenderInpt.value = ''
+  }
+
+  applyFilters();
+})
+
+sortAgeInpt.addEventListener('click', (e) => {
+  const value = e.target.value;
+  sortNameInpt.value = '';
+
+  if (!value) {
+    e.target.value = 'up';
+  } else if (value === 'up') {
+    e.target.value = 'down';
+  } else if (value === 'down') {
+    e.target.value = '';
+  }
+
+  applyFilters();
+});
+
+sortNameInpt.addEventListener('click', (e) => {
+  const value = e.target.value;
+  sortAgeInpt.value = '';
+
+  if (!value) {
+    e.target.value = 'up';
+  } else if (value === 'up') {
+    e.target.value = 'down';
+  } else if (value === 'down') {
+    e.target.value = '';
+  }
+
+  applyFilters();
+});
+
+resetInpt.addEventListener('click', () => {
+  resetInpt.disabled = true;
+  reset();
+  mountCards(allCardElements);
+})
+
+function applyFilters() {
+  
+  const filteredArr = [...allCardElements]
+  .filter(filterByName)
+  .filter(filterByAge)
+  .filter(filterBySex)
+  .sort(sortByAge)
+  .sort(sortByName)
+  
+  if (JSON.stringify(allCardElements) === JSON.stringify(filteredArr)) resetInpt.disabled = true
+  else resetInpt.disabled = false;
+
+  mountCards(filteredArr);
+
+  function filterByName(user) {
+    const firstName = user.userData.name.first.toLowerCase();
+    const lastName = user.userData.name.last.toLowerCase();
+    const input = filterNameInpt.value.toLowerCase();
+
+    return (firstName.startsWith(input) || lastName.toLowerCase().startsWith(input));
+  }
+
+  function filterByAge(user) {
+    const min = filterAgeMinInpt.value;
+    const max = filterAgeMaxInpt.value;
+    const { age } = user.userData.dob;
+
+    if (!min && !max) return user;
+    if (min && !max) return +age >= +min;
+    if (!min && max) return +age <= +max;
+    if (min && max) return +age >= +min && +age <= +max
+  }
+
+  function filterBySex(user) {
+    const input = filterGenderInpt.value;
+    debugger;
+
+    if (input === 'male') {
       return user.userData.gender === 'male';
-    } else if (selection.genderFiltering === -1) {
+    } else if (input === 'female') {
       return user.userData.gender === 'female';
-    } else if (selection.genderFiltering === 0) {
+    } else if (input === '') {
       return true;
+    }
+  }
+
+  function sortByAge(user1, user2) {
+    const input = sortAgeInpt.value;
+    if (input === 'down') {
+      return +user2.userData.dob.age - +user1.userData.dob.age;
+    } else if (input === 'up') {
+      return +user1.userData.dob.age - +user2.userData.dob.age;
+    } else if (input === '') {
+      return 0;
+    }
+  }
+
+  function sortByName(user1, user2) {
+    const input = sortNameInpt.value;
+    const name1 = user1.userData.name.first + user1.userData.name.last;
+    const name2 = user2.userData.name.first + user2.userData.name.last;
+
+    if (input === 'up') {
+      if (name1 > name2) return 1;
+      if (name1 < name2) return -1;
+      if (name1 === name2) return 0;
+    } else if (input === 'down') {
+      if (name1 < name2) return 1;
+      if (name1 > name2) return -1;
+      if (name1 === name2) return 0;
+    } else if (input === '') {
+      return 0;
     }
   }
 }
 
-document.querySelector('#sort-age').addEventListener('click', () => {
-  selection.nameSorting = 0;
-
-  if (selection.ageSorting === 0) {
-    selection.ageSorting = 1;
-  } else if (selection.ageSorting === 1) {
-    selection.ageSorting = -1;
-  } else if (selection.ageSorting === -1) {
-    selection.ageSorting = 0;
-  }
-
-  selection.applyFilters();
-});
-
-document.querySelector('#filter-sex').addEventListener('click', () => {
-  if (selection.genderFiltering === 0) {
-    selection.genderFiltering = 1;
-  } else if (selection.genderFiltering === 1) {
-    selection.genderFiltering = -1;
-  } else if (selection.genderFiltering === -1) {
-    selection.genderFiltering = 0;
-  }
-
-  selection.applyFilters();
-})
-
-document.querySelector('#sort-name').addEventListener('click', () => {
-  selection.ageSorting = 0;
-  if (selection.nameSorting === 0) {
-    selection.nameSorting = 1;
-  } else if (selection.nameSorting === 1) {
-    selection.nameSorting = -1;
-  } else if (selection.nameSorting === -1) {
-    selection.nameSorting = 0;
-  }
-
-  selection.applyFilters();
-})
+function reset() {
+  filterNameInpt.value = '';
+  filterAgeMinInpt.value = '';
+  filterAgeMaxInpt.value = '';
+  filterGenderInpt.value = '';
+  sortAgeInpt.value = '';
+  sortNameInpt.value = '';
+}
