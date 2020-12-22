@@ -129,6 +129,15 @@ button {
   height: 36px;
 }
 
+.search[value=""] {
+  background-image: url("../img/search-48.png");
+  background-size: 18px;
+  background-repeat: no-repeat;
+  background-position-x: 5%;
+  background-position-y: center;
+  text-align: center;
+}
+
 .filter-sex-container, .sort-age-container, .sort-name-container {
   padding: 10px;
 }
@@ -176,27 +185,63 @@ button {
   content: 'Reset';
 }
 
-.filter[value="up"] {
-  background-color: rgb(149, 96, 96);
-}
-
 .filter[value="down"] {
-  background-color: rgb(56, 55, 116);
-}
-
-.filter[value="male"] {
-  background-color: rgb(79, 136, 153);
+  background-image: url("../img/arrow-down-48.png");
+  background-size: 14px;
+  background-repeat: no-repeat;
+  background-position-x: 95%;
+  background-position-y: center;
 }
 
 .filter[value="female"] {
-  background-color: rgb(153, 79, 131);
-  background-image: url("../img/mask10.png");
+  background-image: url("../img/female-48.png");
   background-size: 18px;
   background-repeat: no-repeat;
   background-position-x: 95%;
   background-position-y: center;
+  /* text-align: left; */
+  /* padding-left: 12%; */
+}
+
+.filter[value="male"] {
+  background-image: url("../img/male-48.png");
+  background-size: 18px;
+  background-repeat: no-repeat;
+  background-position-x: 95%;
+  background-position-y: center;
+  /* text-align: left; */
+  /* padding-left: 12%; */
+}
+
+.filter[value="up"] {
+  background-image: url("../img/arrow-up-48.png");
+  background-size: 14px;
+  background-repeat: no-repeat;
+  background-position-x: 95%;
+  background-position-y: center;
+  /* text-align: left; */
+  /* padding-left: 12%; */
+}
+
+.card-phone {
+  background-image: url("../img/phone-48.png");
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position-x: 5%;
+  background-position-y: center;
   text-align: left;
-  padding-left: 12%;
+}
+
+
+.card-email {
+
+  background-image: url("../img/email-48.png");
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position-x: 5%;
+  background-position-y: center;
+  font-size: 12px;
+  text-align: left;
 }
 @media( max-width: 825px) {
   .app-container {

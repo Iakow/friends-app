@@ -17,7 +17,7 @@ const ALL_USER_CARDS = [];
   mountPoint.append(fragment);
 })();
 
-function mountCards(arr) {
+function mountUserCards(arr) {
   const mountPoint = document.querySelector('.main-container');
   const fragment = document.createDocumentFragment();
 
@@ -52,7 +52,7 @@ fetch(`https://randomuser.me/api/?results=${USERS_AMOUNT}`)
       ALL_USER_CARDS[index] = card;
     })
 
-    mountCards(ALL_USER_CARDS);
+    mountUserCards(ALL_USER_CARDS);
   });
 
 document.querySelector('aside').addEventListener('input', (e) => {
@@ -113,7 +113,7 @@ document.querySelector('#reset').addEventListener('click', (e) => {
 
   document.querySelectorAll('.filter').forEach(ctrl => ctrl.value = '');
 
-  mountCards(ALL_USER_CARDS);
+  mountUserCards(ALL_USER_CARDS);
 })
 
 function applyFilters() {
@@ -124,7 +124,7 @@ function applyFilters() {
     .sort(sortByAge)
     .sort(sortByName)
 
-  mountCards(filteredArr);
+  mountUserCards(filteredArr);
 
   const ctrls = document.querySelectorAll('.filter');
   document.querySelector('#reset').disabled = ([...ctrls].every(ctrl => ctrl.value === ''))
@@ -150,7 +150,6 @@ function applyFilters() {
 
   function filterBySex(user) {
     const input = document.querySelector('#filter-sex').value;
-    debugger;
 
     if (input === 'male') {
       return user.userData.gender === 'male';
