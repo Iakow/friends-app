@@ -1,16 +1,26 @@
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  border: 0;
   /* font-size: 100%; */
   /* font: inherit; */
   /* vertical-align: baseline; */
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Arial", "Helvetica", sans-serif;
+  border: 0;
 }
 
 ul {
   list-style: none;
+}
+
+.header {
+  grid-area: header;
+
+  color: grey;
+  font-weight: 400;
+  font-size: 16px;
+
+  background-color: rgb(211, 211, 211);
 }
 
 .app-container {
@@ -18,321 +28,368 @@ ul {
   grid-template-areas: "header header" "aside main";
   grid-template-rows: 60px 1fr;
   grid-template-columns: 250px 1fr;
+
   height: 100vh;
-}
-
-header {
-  background-color: rgb(211, 211, 211);
-  grid-area: header;
-  font-size: 16px;
-  font-weight: 400;
-  color: grey;
-}
-
-aside {
-  background-color: rgb(180, 180, 180);
-  position: relative;
-  grid-area: aside;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 main {
   overflow-y: auto;
 }
 
-button {
-  height: 30px;
-  width: 200px;
-  border-radius: 4px;
-}
-
-.main-container {
-  grid-area: main;
+.user-list {
   display: grid;
-  /* subgrid??? */
+  grid-area: main;
   grid-auto-rows: auto;
-  /* grid-template-rows: 1fr 1fr; */
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-gap: 3vw;
+  /* subgrid??? */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   justify-items: center;
+
   padding: 20px;
 }
 
-.card {
-  background-color: rgb(73, 73, 73);
-  width: 250px;
-  height: 300px;
+.user-card {
   position: relative;
+
   display: flex;
-  justify-content: space-around;
   flex-direction: column;
   align-items: center;
+  justify-content: space-around;
+  width: 250px;
+  height: 300px;
   overflow: hidden;
+
   color: white;
   font-size: 12px;
+
+  background-color: rgb(73, 73, 73);
   border: 1px solid black;
 }
 
-.card-cover {
+.user-card__cover {
+  position: absolute;
+  top: 0;
+  z-index: 0;
+
+  width: 255px;
+  height: 205px;
+
   background-color: rgb(207, 207, 207);
-  background-size: 100%;
   background-repeat: no-repeat;
   background-position-x: center;
   background-position-y: -44px;
-  top: 0;
-  width: 255px;
-  height: 205px;
-  position: absolute;
+  background-size: 100%;
   filter: blur(5px) brightness(60%);
-  z-index: 0;
 }
 
-.card-photo {
-  margin-top: 20px;
+.user-card__photo {
   z-index: 1;
+
+  margin-top: 20px;
+
   border: 4px solid whitesmoke;
   border-radius: 50%;
 }
 
-.card-name, .card-addr {
+.user-card__name,
+.user-card__addr {
   z-index: 1;
   flex-grow: 1;
 }
 
-.card-email, .card-phone {
-  background-color: #fff;
-  color: rgb(68, 68, 68);
+.user-card__email,
+.user-card__phone {
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 50px;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
+
+  color: rgb(68, 68, 68);
   font-weight: bold;
+  font-size: 16px;
+
+  background-color: #ffffff;
 }
 
-.card-addr {
+.user-card__addr {
   display: flex;
   align-items: center;
 }
 
-.search-container {
-  padding: 10px;
-  width: 100%;
+.user-card__phone {
+  text-align: left;
+
+  background-image: url("../img/phone-48.png");
+  background-repeat: no-repeat;
+  background-position-x: 5%;
+  background-position-y: center;
+  background-size: 20px;
 }
 
-.search {
+.user-card__email {
+  font-size: 12px;
+  text-align: left;
+
+  background-image: url("../img/email-48.png");
+  background-repeat: no-repeat;
+  background-position-x: 5%;
+  background-position-y: center;
+  background-size: 20px;
+}
+
+.filters-block {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  grid-area: aside;
+  align-items: center;
+
+  background-color: rgb(180, 180, 180);
+}
+
+/* hjjjjjjjjjj */
+button {
+  width: 200px;
+  height: 30px;
+
+  border-radius: 4px;
+}
+
+.filter-name {
+  width: 100%;
+  padding: 10px;
+}
+
+.filter-name__input {
   width: 100%;
   height: 36px;
 }
 
-.search[value=""] {
+.filter-name__input[value=""] {
+  text-align: center;
+
   background-image: url("../img/search-48.png");
-  background-size: 18px;
   background-repeat: no-repeat;
   background-position-x: 5%;
   background-position-y: center;
-  text-align: center;
+  background-size: 18px;
 }
 
-.filter-sex-container, .sort-age-container, .sort-name-container {
+.filter-sex,
+.sort-age,
+.sort-name {
   padding: 10px;
-}
-
-.filter-age-container {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 10px;
-}
-
-.filter-age-container::before {
-  content: 'Age: from ';
 }
 
 .filter-age {
-  text-align: center;
-  font-size: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px;
+}
+
+.filter-age::before {
+  content: "Age: from ";
+}
+
+.filter-age__input {
   width: 20%;
   height: 30px;
+
+  font-size: 20px;
+  text-align: center;
 }
 
-.filter-age-divider::before {
-  content: 'to';
+.filter-age__divider::before {
+  content: "to";
 }
 
-.filter-sex::before {
+.filter-sex__input::before {
   content: "Filter by sex";
 }
 
-.sort-name::before {
+.sort-name__input::before {
   content: "Sort by name";
 }
 
-.sort-age::before {
+.sort-age__input::before {
   content: "Sort by age";
 }
 
-.reset {
+.reset-filters {
   margin: 20px;
 }
 
-.reset::before {
-  content: 'Reset';
+.reset-filters::before {
+  content: "Reset";
 }
 
 .filter[value="down"] {
   background-image: url("../img/arrow-down-48.png");
-  background-size: 14px;
   background-repeat: no-repeat;
   background-position-x: 95%;
   background-position-y: center;
+  background-size: 14px;
 }
 
 .filter[value="female"] {
   background-image: url("../img/female-48.png");
-  background-size: 18px;
   background-repeat: no-repeat;
   background-position-x: 95%;
   background-position-y: center;
+  background-size: 18px;
   /* text-align: left; */
   /* padding-left: 12%; */
 }
 
 .filter[value="male"] {
   background-image: url("../img/male-48.png");
-  background-size: 18px;
   background-repeat: no-repeat;
   background-position-x: 95%;
   background-position-y: center;
+  background-size: 18px;
   /* text-align: left; */
   /* padding-left: 12%; */
 }
 
 .filter[value="up"] {
   background-image: url("../img/arrow-up-48.png");
-  background-size: 14px;
   background-repeat: no-repeat;
   background-position-x: 95%;
   background-position-y: center;
+  background-size: 14px;
   /* text-align: left; */
   /* padding-left: 12%; */
 }
 
-.card-phone {
-  background-image: url("../img/phone-48.png");
-  background-size: 20px;
-  background-repeat: no-repeat;
-  background-position-x: 5%;
-  background-position-y: center;
-  text-align: left;
-}
-
-
-.card-email {
-
-  background-image: url("../img/email-48.png");
-  background-size: 20px;
-  background-repeat: no-repeat;
-  background-position-x: 5%;
-  background-position-y: center;
-  font-size: 12px;
-  text-align: left;
-}
-@media( max-width: 825px) {
+@media (max-width: 825px) {
   .app-container {
     display: grid;
     grid-template-areas: "header" "aside" "main";
     grid-template-rows: 60px 60px 1fr;
     grid-template-columns: 1fr;
+
     height: 100vh;
   }
-  aside {
+
+  .filters-block {
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
   }
-  .filter-age-container {
-    width: 25%;
-    justify-content: center;
-    color: whitesmoke
-  }
-  .filter-age-container::before {
-    content: 'Age:';
-  }
+
   .filter-age {
-    font-size: 13px;
+    justify-content: center;
+
+    width: 25%;
+
+    color: whitesmoke;
+  }
+
+  .filter-age::before {
+    content: "Age:";
+  }
+
+  .filter-age__input {
     width: 30px;
     margin: 0 8px;
+
+    font-size: 13px;
   }
-  .filter-age-divider::before {
-    content: '-'
+
+  .filter-age__divider::before {
+    content: "-";
   }
-  .search-container {
+
+  .filter-name {
     flex-grow: 1;
   }
-  .sort-age, .sort-name, .filter-sex {
-    height: 30px;
+
+  .sort-age__input,
+  .sort-name__input,
+  .filter-sex__input {
     width: 50px;
+    height: 30px;
   }
-  .reset {
+
+  .reset-filters {
     position: absolute;
-    right: -19px;
     top: -32px;
-    height: 20px;
+    right: -19px;
+
     width: 20px;
-    border-radius: 50%;
+    height: 20px;
+
     background-color: red;
+    border-radius: 50%;
   }
-  .reset::before {
-    content: '';
+
+  .reset-filters::before {
+    content: "";
   }
-  .sort-age::before {
+
+  .sort-age__input::before {
     content: "age";
   }
-  .sort-name::before {
+
+  .sort-name__input::before {
     content: "name";
   }
-  .filter-sex::before {
+
+  .filter-sex__input::before {
     content: "sex";
   }
 }
 
-@media( max-width: 575px) {
+@media (max-width: 575px) {
   .app-container {
     display: grid;
     grid-template-areas: "header" "aside" "main";
     grid-template-rows: 60px 40px 1fr;
     grid-template-columns: 1fr;
+
     height: 100vh;
   }
-  .main-container {
+
+  .user-list {
     grid-template-columns: 1fr;
+
     padding: 10px 0;
   }
-  .card {
+
+  .user-card {
     width: 100%;
     height: 30vw;
   }
-  .filter-age-container {
-    padding: 2px 0;
+
+  .filter-age {
     width: auto;
+    padding: 2px 0;
   }
-  .filter-age-container::before, .filter-age-divider {
+
+  .filter-age::before,
+  .filter-age__divider {
     /* padding-top: 9px; */
     font-size: 12px;
   }
-  .filter-sex-container, .sort-age-container, .sort-name-container {
+
+  .filter-sex,
+  .sort-age,
+  .sort-name {
     padding: 2px;
   }
-  .filter-age {
+
+  .filter-age__input {
     margin: 2px;
   }
-  .search-container {
+
+  .filter-name {
     padding: 0 1%;
   }
 }

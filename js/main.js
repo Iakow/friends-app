@@ -4,12 +4,12 @@ const USERS_AMOUNT = 100;
 const ALL_USER_CARDS = [];
 
 (function mountPlaceHolders() {
-  const mountPoint = document.querySelector('.main-container');
+  const mountPoint = document.querySelector('#user-list');
   const fragment = document.createDocumentFragment();
 
   for (let i = 1; i <= USERS_AMOUNT; i++) {
     const card = document.createElement('li');
-    card.className = 'card';
+    card.className = 'user-card';
 
     fragment.append(card);
   }
@@ -18,7 +18,7 @@ const ALL_USER_CARDS = [];
 })();
 
 function mountUserCards(arr) {
-  const mountPoint = document.querySelector('.main-container');
+  const mountPoint = document.querySelector('#user-list');
   const fragment = document.createDocumentFragment();
 
   arr.forEach(cardEl => {
@@ -36,17 +36,17 @@ fetch(`https://randomuser.me/api/?results=${USERS_AMOUNT}`)
 
     users.forEach((userData, index) => {
       const card = document.createElement('li');
-      card.className = 'card';
+      card.className = 'user-card';
       card.userData = userData;
 
-      const flag = `<img src="https://www.countryflags.io/${userData.nat}/flat/24.png">`;
+      const flag = `<img class="card-user__flag" src="https://www.countryflags.io/${userData.nat}/flat/24.png">`;
       card.innerHTML = ([
-        `<div class="card-cover" style="background-image: url('${userData.picture.large}')"></div>`,
-        `<img class="card-photo" src="${userData.picture.large}" height="128" width="128">`,
-        `<p class="card-name">${userData.name.first} ${userData.name.last}, ${userData.dob.age}</p>`,
-        `<p class="card-addr">${flag}${userData.location.country}, ${userData.location.city}</p>`,
-        `<p class="card-phone">${userData.phone}</p>`,
-        `<p class="card-email">${userData.email}</p>`
+        `<div class="user-card__cover" style="background-image: url('${userData.picture.large}')"></div>`,
+        `<img class="user-card__photo" src="${userData.picture.large}" height="128" width="128">`,
+        `<p class="user-card__name">${userData.name.first} ${userData.name.last}, ${userData.dob.age}</p>`,
+        `<p class="user-card__addr">${flag}${userData.location.country}, ${userData.location.city}</p>`,
+        `<p class="user-card__phone">${userData.phone}</p>`,
+        `<p class="user-card__email">${userData.email}</p>`
       ].join('\n'))
 
       ALL_USER_CARDS[index] = card;
@@ -108,7 +108,7 @@ document.querySelector('aside').addEventListener('click', (e) => {
   applyFilters();
 })
 
-document.querySelector('#reset').addEventListener('click', (e) => {
+document.querySelector('#reset-filters').addEventListener('click', (e) => {
   e.target.disabled = true;
 
   document.querySelectorAll('.filter').forEach(ctrl => ctrl.value = '');
@@ -121,13 +121,13 @@ function applyFilters() {
     .filter(filterByName)
     .filter(filterByAge)
     .filter(filterBySex)
-    .sort(sortByAge)
+    .sort(sortByAge) 
     .sort(sortByName)
 
   mountUserCards(filteredArr);
 
   const ctrls = document.querySelectorAll('.filter');
-  document.querySelector('#reset').disabled = ([...ctrls].every(ctrl => ctrl.value === ''))
+  document.querySelector('#reset-filters').disabled = ([...ctrls].every(ctrl => ctrl.value === ''))
 
   function filterByName(user) {
     const firstName = user.userData.name.first.toLowerCase();
