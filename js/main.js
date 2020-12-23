@@ -3,7 +3,7 @@
 const USERS_AMOUNT = 100;
 const ALL_USER_CARDS = [];
 
-(function mountPlaceHolders() {
+/* (function mountPlaceHolders() {
   const mountPoint = document.querySelector('#user-list');
   const fragment = document.createDocumentFragment();
 
@@ -15,13 +15,35 @@ const ALL_USER_CARDS = [];
   }
 
   mountPoint.append(fragment);
-})();
+})(); */
 
-function mountUserCards(arr) {
+function mountPlaceholders () {
+
+  for(let i = 0; i < USERS_AMOUNT; i++) {
+    const placeholder = document.createElement('div');
+    placeholder.className = 'user-card';
+
+    placeholder.innerHTML =([
+      `<img class="user-card__photo" height="100" width="100">`,
+      `<p class="user-card__name">User Name, 20 </p>`,
+      `<p class="user-card__addr"><img width="24" height="24">Country, City</p>`,
+      `<p class="user-card__phone">Phone</p>`,
+      `<p class="user-card__email">Email</p>`
+    ].join('\n'));
+
+    ALL_USER_CARDS.push(placeholder);
+  }
+
+  mountUserCards(ALL_USER_CARDS);
+}
+
+mountPlaceholders();
+
+function mountUserCards(elements) {
   const mountPoint = document.querySelector('#user-list');
   const fragment = document.createDocumentFragment();
 
-  arr.forEach(cardEl => {
+  elements.forEach(cardEl => {
     fragment.append(cardEl);
   })
 
@@ -42,7 +64,7 @@ fetch(`https://randomuser.me/api/?results=${USERS_AMOUNT}`)
       const flag = `<img class="card-user__flag" src="https://www.countryflags.io/${userData.nat}/flat/24.png">`;
       card.innerHTML = ([
         `<div class="user-card__cover" style="background-image: url('${userData.picture.large}')"></div>`,
-        `<img class="user-card__photo" src="${userData.picture.large}" height="128" width="128">`,
+        `<img class="user-card__photo" src="${userData.picture.large}" height="100" width="100">`,
         `<p class="user-card__name">${userData.name.first} ${userData.name.last}, ${userData.dob.age}</p>`,
         `<p class="user-card__addr">${flag}${userData.location.country}, ${userData.location.city}</p>`,
         `<p class="user-card__phone">${userData.phone}</p>`,
