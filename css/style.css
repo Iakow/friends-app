@@ -416,8 +416,8 @@ main {
 
 @media (max-width: 575px) {
   .app-container {
-    grid-template-areas: "header" "main" "aside";
-    grid-template-rows: 60px 1fr 40px;
+    grid-template-areas: "header" "aside" "main";
+    grid-template-rows: 60px 40px 1fr;
   }
 
   .user-list {
