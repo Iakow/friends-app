@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const USERS_AMOUNT = 100;
 const ALL_USER_CARDS = [];
@@ -17,19 +17,18 @@ const ALL_USER_CARDS = [];
   mountPoint.append(fragment);
 })(); */
 
-function mountPlaceholders () {
+function mountPlaceholders() {
+  for (let i = 0; i < USERS_AMOUNT; i++) {
+    const placeholder = document.createElement("div");
+    placeholder.className = "user-card";
 
-  for(let i = 0; i < USERS_AMOUNT; i++) {
-    const placeholder = document.createElement('div');
-    placeholder.className = 'user-card';
-
-    placeholder.innerHTML =([
+    placeholder.innerHTML = [
       `<img class="user-card__photo" height="100" width="100">`,
       `<p class="user-card__name">User Name, 20 </p>`,
       `<p class="user-card__addr"><img width="24" height="24">Country, City</p>`,
       `<p class="user-card__phone">Phone</p>`,
-      `<p class="user-card__email">Email</p>`
-    ].join('\n'));
+      `<p class="user-card__email">Email</p>`,
+    ].join("\n");
 
     ALL_USER_CARDS.push(placeholder);
   }
@@ -40,173 +39,175 @@ function mountPlaceholders () {
 mountPlaceholders();
 
 function mountUserCards(elements) {
-  const mountPoint = document.querySelector('#user-list');
+  const mountPoint = document.querySelector("#user-list");
   const fragment = document.createDocumentFragment();
 
-  elements.forEach(cardEl => {
+  elements.forEach((cardEl) => {
     fragment.append(cardEl);
-  })
+  });
 
-  mountPoint.innerHTML = '';
-  mountPoint.append(fragment)
+  mountPoint.innerHTML = "";
+  mountPoint.append(fragment);
 }
 
 fetch(`https://randomuser.me/api/?results=${USERS_AMOUNT}`)
-  .then(response => response.json())
-  .then(response => {
+  .then((response) => response.json())
+  .then((response) => {
     const users = response.results;
 
     users.forEach((userData, index) => {
-      const card = document.createElement('li');
-      card.className = 'user-card';
+      const card = document.createElement("li");
+      card.className = "user-card";
       card.userData = userData;
 
-      const flag = `<img class="card-user__flag" src="https://www.countryflags.io/${userData.nat}/flat/24.png">`;
-      card.innerHTML = ([
+      const flag = `<img class="user-card__flag" src="https://www.countryflags.io/${userData.nat}/flat/24.png">`;
+      card.innerHTML = [
         `<div class="user-card__cover" style="background-image: url('${userData.picture.large}')"></div>`,
         `<img class="user-card__photo" src="${userData.picture.large}" height="100" width="100">`,
         `<p class="user-card__name">${userData.name.first} ${userData.name.last}, ${userData.dob.age}</p>`,
         `<p class="user-card__addr">${flag}${userData.location.country}, ${userData.location.city}</p>`,
         `<p class="user-card__phone">${userData.phone}</p>`,
-        `<p class="user-card__email">${userData.email}</p>`
-      ].join('\n'))
+        `<p class="user-card__email">${userData.email}</p>`,
+      ].join("\n");
 
       ALL_USER_CARDS[index] = card;
-    })
+    });
 
     mountUserCards(ALL_USER_CARDS);
   });
 
-document.querySelector('aside').addEventListener('input', (e) => {
+document.querySelector("aside").addEventListener("input", (e) => {
   const { id } = e.target;
 
-  if (id === 'filter-name') {
+  if (id === "filter-name") {
     e.target.value = e.target.value.trim();
   }
 
-  if (id === 'filter-age-min' || id === 'filter-age-max') {
-    if (e.target.value === '0') e.target.value = '';
+  if (id === "filter-age-min" || id === "filter-age-max") {
+    if (e.target.value === "0") e.target.value = "";
   }
 
   applyFilters();
 });
 
-document.querySelector('aside').addEventListener('click', (e) => {
-
+document.querySelector("aside").addEventListener("click", (e) => {
   const { id, value } = e.target;
 
-  if (id === 'filter-sex') {
+  /* добавить нужный класс и убрать ненужный */
+
+  if (id === "filter-sex") {
     if (!value) {
-      e.target.value = 'female'
-    } else if (value === 'female') {
-      e.target.value = 'male'
-    } else if (value === 'male') {
-      e.target.value = ''
+      e.target.value = "female";
+    } else if (value === "female") {
+      e.target.value = "male";
+    } else if (value === "male") {
+      e.target.value = "";
     }
-  } else if (id === 'sort-age') {
-    document.querySelector('#sort-name').value = '';
+  } else if (id === "sort-age") {
+    document.querySelector("#sort-name").value = "";
 
     if (!value) {
-      e.target.value = 'up';
-    } else if (value === 'up') {
-      e.target.value = 'down';
-    } else if (value === 'down') {
-      e.target.value = '';
+      e.target.value = "up";
+    } else if (value === "up") {
+      e.target.value = "down";
+    } else if (value === "down") {
+      e.target.value = "";
     }
-  } else if (id === 'sort-name') {
-    document.querySelector('#sort-age').value = '';
+  } else if (id === "sort-name") {
+    document.querySelector("#sort-age").value = "";
 
     if (!value) {
-      e.target.value = 'up';
-    } else if (value === 'up') {
-      e.target.value = 'down';
-    } else if (value === 'down') {
-      e.target.value = '';
+      e.target.value = "up";
+    } else if (value === "up") {
+      e.target.value = "down";
+    } else if (value === "down") {
+      e.target.value = "";
     }
   } else {
-    return
+    return;
   }
 
   applyFilters();
-})
+});
 
-document.querySelector('#reset-filters').addEventListener('click', (e) => {
+document.querySelector("#reset-filters").addEventListener("click", (e) => {
   e.target.disabled = true;
 
-  document.querySelectorAll('.filter').forEach(ctrl => ctrl.value = '');
+  document.querySelectorAll(".filter").forEach((ctrl) => (ctrl.value = ""));
 
   mountUserCards(ALL_USER_CARDS);
-})
+});
 
 function applyFilters() {
   const filteredArr = [...ALL_USER_CARDS]
     .filter(filterByName)
     .filter(filterByAge)
     .filter(filterBySex)
-    .sort(sortByAge) 
-    .sort(sortByName)
+    .sort(sortByAge)
+    .sort(sortByName);
 
   mountUserCards(filteredArr);
 
-  const ctrls = document.querySelectorAll('.filter');
-  document.querySelector('#reset-filters').disabled = ([...ctrls].every(ctrl => ctrl.value === ''))
+  const ctrls = document.querySelectorAll(".filter");
+  document.querySelector("#reset-filters").disabled = [...ctrls].every(
+    (ctrl) => ctrl.value === ""
+  );
 
   function filterByName(user) {
     const firstName = user.userData.name.first.toLowerCase();
-    const input = document.querySelector('#filter-name').value.toLowerCase();
+    const input = document.querySelector("#filter-name").value.toLowerCase();
 
-    return (firstName.startsWith(input));
-
+    return firstName.startsWith(input);
   }
 
   function filterByAge(user) {
-    const min = document.querySelector('#filter-age-min').value;
-    const max = document.querySelector('#filter-age-max').value;
+    const min = document.querySelector("#filter-age-min").value;
+    const max = document.querySelector("#filter-age-max").value;
     const { age } = user.userData.dob;
 
     if (!min && !max) return user;
     if (min && !max) return +age >= +min;
     if (!min && max) return +age <= +max;
-    if (min && max) return +age >= +min && +age <= +max
+    if (min && max) return +age >= +min && +age <= +max;
   }
 
   function filterBySex(user) {
-    const input = document.querySelector('#filter-sex').value;
+    const input = document.querySelector("#filter-sex").value;
 
-    if (input === 'male') {
-      return user.userData.gender === 'male';
-    } else if (input === 'female') {
-      return user.userData.gender === 'female';
-    } else if (input === '') {
+    if (input === "male") {
+      return user.userData.gender === "male";
+    } else if (input === "female") {
+      return user.userData.gender === "female";
+    } else if (input === "") {
       return true;
     }
   }
 
   function sortByAge(user1, user2) {
-    const input = document.querySelector('#sort-age').value;
-    if (input === 'down') {
+    const input = document.querySelector("#sort-age").value;
+    if (input === "down") {
       return +user2.userData.dob.age - +user1.userData.dob.age;
-    } else if (input === 'up') {
+    } else if (input === "up") {
       return +user1.userData.dob.age - +user2.userData.dob.age;
-    } else if (input === '') {
+    } else if (input === "") {
       return 0;
     }
   }
 
   function sortByName(user1, user2) {
-    const input = document.querySelector('#sort-name').value;
+    const input = document.querySelector("#sort-name").value;
     const name1 = user1.userData.name.first + user1.userData.name.last;
     const name2 = user2.userData.name.first + user2.userData.name.last;
 
-    if (input === 'up') {
+    if (input === "up") {
       if (name1 > name2) return 1;
       if (name1 < name2) return -1;
       if (name1 === name2) return 0;
-    } else if (input === 'down') {
+    } else if (input === "down") {
       if (name1 < name2) return 1;
       if (name1 > name2) return -1;
       if (name1 === name2) return 0;
-    } else if (input === '') {
+    } else if (input === "") {
       return 0;
     }
   }
