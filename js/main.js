@@ -3,20 +3,6 @@
 const USERS_AMOUNT = 100;
 const ALL_USER_CARDS = [];
 
-/* (function mountPlaceHolders() {
-  const mountPoint = document.querySelector('#user-list');
-  const fragment = document.createDocumentFragment();
-
-  for (let i = 1; i <= USERS_AMOUNT; i++) {
-    const card = document.createElement('li');
-    card.className = 'user-card';
-
-    fragment.append(card);
-  }
-
-  mountPoint.append(fragment);
-})(); */
-
 function mountPlaceholders() {
   for (let i = 0; i < USERS_AMOUNT; i++) {
     const placeholder = document.createElement("div");
@@ -92,8 +78,6 @@ document.querySelector("aside").addEventListener("input", (e) => {
 
 document.querySelector("aside").addEventListener("click", (e) => {
   const { id, value } = e.target;
-
-  /* добавить нужный класс и убрать ненужный */
 
   if (id === "filter-sex") {
     if (!value) {

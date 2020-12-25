@@ -24,16 +24,16 @@ ul {
   background-color: rgb(34 77 101);
 }
 
+main {
+  overflow-y: auto;
+}
+
 .app-container {
   display: grid;
   grid-template-areas: "header header" "aside main";
   grid-template-rows: 60px 1fr;
   grid-template-columns: 250px 1fr;
   height: 100vh;
-}
-
-main {
-  overflow-y: auto;
 }
 
 .user-list {
@@ -64,7 +64,7 @@ main {
   color: white;
   font-size: 12px;
 
-  background-color: rgb(73, 73, 73);
+  background-color: #4e646d;
   border-radius: 4px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
@@ -139,6 +139,10 @@ main {
   align-self: start;
 }
 
+.user-card__flag {
+  margin-right: 4px;
+}
+
 .user-card__phone {
   grid-area: phone;
 
@@ -185,7 +189,10 @@ main {
   background-color: #939393;
 }
 
-.filter-name {
+.filter-name,
+.filter-sex,
+.sort-age,
+.sort-name {
   width: 100%;
 }
 
@@ -202,13 +209,6 @@ main {
   background-size: 18px;
   border: 1px solid grey;
   border-radius: 4px;
-}
-
-.filter-sex,
-.sort-age,
-.sort-name {
-  width: 100%;
-  /* padding: 10px; */
 }
 
 .filter-age {
@@ -242,18 +242,15 @@ main {
 }
 
 .filter-sex__input::before {
-  text-transform: uppercase;
-  content: "Filter by sex";
+  content: "FILTER BY SEX";
 }
 
 .sort-name__input::before {
-  text-transform: uppercase;
-  content: "Sort by name";
+  content: "SORT BY NAME";
 }
 
 .sort-age__input::before {
-  text-transform: uppercase;
-  content: "Sort by age";
+  content: "SORT BY AGE";
 }
 
 .reset-filters {
@@ -282,42 +279,37 @@ main {
 .filter[value="down"] {
   background-color: white;
   background-image: url("../img/arrow-down-48.png");
-  background-repeat: no-repeat;
-  background-position-x: 95%;
-  background-position-y: center;
   background-size: 14px;
 }
 
-.filter[value="down"]:hover {
+.filter {
+  background-repeat: no-repeat;
+  background-position-x: 95%;
+  background-position-y: center;
+}
+
+.filter[value="down"]:hover,
+.filter[value="up"]:hover,
+.filter[value="male"]:hover,
+.filter[value="female"]:hover {
   background-color: #b7b7b7;
 }
 
 .filter[value="female"] {
-  /* text-align: left; */
-  /* padding-left: 12%; */
   background-color: white;
   background-image: url("../img/female-48.png");
-  background-repeat: no-repeat;
-  background-position-x: 95%;
-  background-position-y: center;
   background-size: 18px;
 }
 
 .filter[value="male"] {
   background-color: white;
   background-image: url("../img/male-48.png");
-  background-repeat: no-repeat;
-  background-position-x: 95%;
-  background-position-y: center;
   background-size: 18px;
 }
 
 .filter[value="up"] {
   background-color: white;
   background-image: url("../img/arrow-up-48.png");
-  background-repeat: no-repeat;
-  background-position-x: 95%;
-  background-position-y: center;
   background-size: 14px;
 }
 
@@ -325,11 +317,8 @@ main {
   .header {
     justify-content: center;
     padding: 0;
-    font-size: 9px;
-  }
 
-  .filter {
-    font-size: 10px;
+    font-size: 9px;
   }
 
   .app-container {
@@ -337,7 +326,6 @@ main {
     grid-template-areas: "header" "aside" "main";
     grid-template-rows: 60px 60px 1fr;
     grid-template-columns: 1fr;
-
     height: 100vh;
   }
 
@@ -348,15 +336,15 @@ main {
     padding: 0 4px;
   }
 
-  .filter-age {
-    justify-content: center;
-
-    width: 25%;
-
-    color: whitesmoke;
+  .filter {
+    font-size: 10px;
   }
 
   .filter-age {
+    justify-content: center;
+    width: 25%;
+
+    color: whitesmoke;
     content: "Age:";
   }
 
@@ -376,9 +364,17 @@ main {
     flex-shrink: 0;
   }
 
-  /* .filter-name__input {
-    height: 30px;
-  } */
+  .sort-age__input::before {
+    content: "AGE";
+  }
+
+  .sort-name__input::before {
+    content: "NAME";
+  }
+
+  .filter-sex__input::before {
+    content: "SEX";
+  }
 
   .reset-filters {
     position: absolute;
@@ -393,24 +389,17 @@ main {
     border-radius: 50%;
   }
 
+  .reset-filters:hover {
+    background-color: #bf186a;
+    transform: scale(2) translateX(-5px);
+  }
+
   .reset-filters:disabled {
     display: none;
   }
 
   .reset-filters::before {
     content: "x";
-  }
-
-  .sort-age__input::before {
-    content: "age";
-  }
-
-  .sort-name__input::before {
-    content: "name";
-  }
-
-  .filter-sex__input::before {
-    content: "sex";
   }
 }
 
@@ -438,19 +427,16 @@ main {
     align-self: center;
     width: 90px;
     height: 90px;
+
     border-width: 2px;
   }
 
   .user-card__cover {
-    /* display: none; */
+    display: none;
   }
 
   .user-card__name {
-    /* justify-self: end; */
     font-size: 16px;
-  }
-
-  .user-card__addr {
   }
 
   .user-card__name,
@@ -460,7 +446,9 @@ main {
     justify-content: center;
     width: 100%;
     height: 100%;
+
     color: #2e59a8;
+
     background-color: #f9f9f9;
   }
 
@@ -472,13 +460,14 @@ main {
   .user-card__phone {
     letter-spacing: 0.4px;
   }
+
   .user-card__email,
   .user-card__phone {
-    /* background-color: transparent; */
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
+
     background-color: #e8e8e8;
   }
 
@@ -530,14 +519,9 @@ main {
   .filter[value="male"],
   .filter[value="female"] {
     background-position-x: 100%;
-    /* background-size: 10px; */
   }
 
   .reset-filters {
     z-index: 2;
-  }
-
-  .reset-filters:hover {
-    transform: scale(2);
   }
 }
