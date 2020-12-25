@@ -1,126 +1,90 @@
 "use strict";
 
+disableFilters();
+
 const USERS_AMOUNT = 100;
+
+mountUserList(getPlaceholders());
+
 const ALL_USER_CARDS = [];
-
-function mountPlaceholders() {
-  for (let i = 0; i < USERS_AMOUNT; i++) {
-    const placeholder = document.createElement("div");
-    placeholder.className = "user-card";
-
-    placeholder.innerHTML = [
-      `<img class="user-card__photo" height="100" width="100">`,
-      `<p class="user-card__name">User Name, 20 </p>`,
-      `<p class="user-card__addr"><img width="24" height="24">Country, City</p>`,
-      `<p class="user-card__phone">Phone</p>`,
-      `<p class="user-card__email">Email</p>`,
-    ].join("\n");
-
-    ALL_USER_CARDS.push(placeholder);
-  }
-
-  mountUserCards(ALL_USER_CARDS);
-}
-
-mountPlaceholders();
-
-function mountUserCards(elements) {
-  const mountPoint = document.querySelector("#user-list");
-  const fragment = document.createDocumentFragment();
-
-  elements.forEach((cardEl) => {
-    fragment.append(cardEl);
-  });
-
-  mountPoint.innerHTML = "";
-  mountPoint.append(fragment);
-}
 
 fetch(`https://randomuser.me/api/?results=${USERS_AMOUNT}`)
   .then((response) => response.json())
   .then((response) => {
-    const users = response.results;
-
-    users.forEach((userData, index) => {
-      const card = document.createElement("li");
-      card.className = "user-card";
-      card.userData = userData;
-
-      const flag = `<img class="user-card__flag" src="https://www.countryflags.io/${userData.nat}/flat/24.png">`;
-      card.innerHTML = [
-        `<div class="user-card__cover" style="background-image: url('${userData.picture.large}')"></div>`,
-        `<img class="user-card__photo" src="${userData.picture.large}" height="100" width="100">`,
-        `<p class="user-card__name">${userData.name.first} ${userData.name.last}, ${userData.dob.age}</p>`,
-        `<p class="user-card__addr">${flag}${userData.location.country}, ${userData.location.city}</p>`,
-        `<p class="user-card__phone">${userData.phone}</p>`,
-        `<p class="user-card__email">${userData.email}</p>`,
-      ].join("\n");
-
-      ALL_USER_CARDS[index] = card;
+    response.results.forEach((userData) => {
+      ALL_USER_CARDS.push(getUserCard(userData));
     });
 
-    mountUserCards(ALL_USER_CARDS);
+    mountUserList(ALL_USER_CARDS);
+    enableFilters();
   });
 
-document.querySelector("aside").addEventListener("input", (e) => {
-  const { id } = e.target;
+addHandlers();
 
-  if (id === "filter-name") {
-    e.target.value = e.target.value.trim();
-  }
 
-  if (id === "filter-age-min" || id === "filter-age-max") {
-    if (e.target.value === "0") e.target.value = "";
-  }
+function addHandlers() {
+  const filtersBlock = document.querySelector("#filters-block");
 
-  applyFilters();
-});
+  filtersBlock.addEventListener("input", (e) => {
+    const { id } = e.target;
 
-document.querySelector("aside").addEventListener("click", (e) => {
-  const { id, value } = e.target;
-
-  if (id === "filter-sex") {
-    if (!value) {
-      e.target.value = "female";
-    } else if (value === "female") {
-      e.target.value = "male";
-    } else if (value === "male") {
-      e.target.value = "";
+    if (id === "filter-name") {
+      e.target.value = e.target.value.trim();
     }
-  } else if (id === "sort-age") {
-    document.querySelector("#sort-name").value = "";
 
-    if (!value) {
-      e.target.value = "up";
-    } else if (value === "up") {
-      e.target.value = "down";
-    } else if (value === "down") {
-      e.target.value = "";
+    if (id === "filter-age-min" || id === "filter-age-max") {
+      if (e.target.value === "0") e.target.value = "";
     }
-  } else if (id === "sort-name") {
-    document.querySelector("#sort-age").value = "";
 
-    if (!value) {
-      e.target.value = "up";
-    } else if (value === "up") {
-      e.target.value = "down";
-    } else if (value === "down") {
-      e.target.value = "";
+    applyFilters();
+  });
+
+  filtersBlock.addEventListener("click", (e) => {
+    const { id, value } = e.target;
+
+    if (id === "filter-sex") {
+      if (!value) {
+        e.target.value = "female";
+      } else if (value === "female") {
+        e.target.value = "male";
+      } else if (value === "male") {
+        e.target.value = "";
+      }
+    } else if (id === "sort-age") {
+      document.querySelector("#sort-name").value = "";
+
+      if (!value) {
+        e.target.value = "up";
+      } else if (value === "up") {
+        e.target.value = "down";
+      } else if (value === "down") {
+        e.target.value = "";
+      }
+    } else if (id === "sort-name") {
+      document.querySelector("#sort-age").value = "";
+
+      if (!value) {
+        e.target.value = "up";
+      } else if (value === "up") {
+        e.target.value = "down";
+      } else if (value === "down") {
+        e.target.value = "";
+      }
+    } else {
+      return;
     }
-  } else {
-    return;
-  }
 
-  applyFilters();
-});
+    applyFilters();
+  });
 
-document.querySelector("#reset-filters").addEventListener("click", (e) => {
-  e.target.disabled = true;
+  document.querySelector("#reset-filters").addEventListener("click", (e) => {
+    e.target.disabled = true;
 
-  document.querySelectorAll(".filter").forEach((ctrl) => (ctrl.value = ""));
+    document.querySelectorAll(".filter").forEach((ctrl) => (ctrl.value = ""));
 
-  mountUserCards(ALL_USER_CARDS);
-});
+    mountUserList(ALL_USER_CARDS);
+  });
+}
 
 function applyFilters() {
   const filteredArr = [...ALL_USER_CARDS]
@@ -130,7 +94,7 @@ function applyFilters() {
     .sort(sortByAge)
     .sort(sortByName);
 
-  mountUserCards(filteredArr);
+  mountUserList(filteredArr);
 
   const ctrls = document.querySelectorAll(".filter");
   document.querySelector("#reset-filters").disabled = [...ctrls].every(
@@ -195,4 +159,74 @@ function applyFilters() {
       return 0;
     }
   }
+}
+
+function disableFilters() {
+  document
+    .querySelectorAll(".filter")
+    .forEach((controll) => (controll.disabled = true));
+}
+
+function enableFilters() {
+  document
+    .querySelectorAll(".filter")
+    .forEach((controll) => (controll.disabled = false));
+}
+
+function getPlaceholders() {
+  function getPlaceholder() {
+    const fakeUserCard = document.createElement("div");
+    fakeUserCard.className = "user-card placeholder";
+
+    fakeUserCard.innerHTML = [
+      `<img class="user-card__photo" height="100" width="100">`,
+      `<p class="user-card__name">Full Name, AGE </p>`,
+      `<p class="user-card__addr">Country, City</p>`,
+      `<p class="user-card__phone">PHONE-NUMBER</p>`,
+      `<p class="user-card__email">user e-mail address</p>`
+    ].join("\n");
+
+    return fakeUserCard;
+  }
+
+  const placeholders = [];
+
+  for (let i = 0; i < USERS_AMOUNT; i++) {
+    placeholders.push(getPlaceholder());
+  }
+
+  return placeholders;
+}
+
+function getUserCard(fetchedUserData) {
+  const card = document.createElement("li");
+  card.className = "user-card";
+  card.userData = fetchedUserData;
+
+  const {nat, picture, name, dob, location, phone, email} = fetchedUserData;
+
+  const flag = `<img class="user-card__flag" src="https://www.countryflags.io/${nat}/flat/24.png">`;
+
+  card.innerHTML = [
+    `<div class="user-card__cover" style="background-image: url('${picture.large}')"></div>`,
+    `<img class="user-card__photo" src="${picture.large}">`,
+    `<p class="user-card__name">${name.first} ${name.last}, ${dob.age}</p>`,
+    `<p class="user-card__addr">${flag}${location.country}, ${location.city}</p>`,
+    `<p class="user-card__phone">${phone}</p>`,
+    `<p class="user-card__email">${email}</p>`
+  ].join("\n");
+
+  return card;
+}
+
+function mountUserList(usercardsArr) {
+  const userList = document.querySelector("#user-list");
+  const fragment = document.createDocumentFragment();
+
+  usercardsArr.forEach((card) => {
+    fragment.append(card);
+  });
+
+  userList.innerHTML = "";
+  userList.append(fragment);
 }
