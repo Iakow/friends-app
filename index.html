@@ -14,45 +14,72 @@
 
     <aside>
       <form class="filters-block" id="filters-block">
-      <div class="filter-name">
-        <input
-          class="filter-name__input filter"
-          id="filter-name"
-          type="search"
-          placeholder="Name"
-        />
-      </div>
+        <div class="filter-name">
+          <input
+            form="filters-block"
+            name="name"
+            class="filter-name__input filter"
+            id="filter-name"
+            type="search"
+            placeholder="Name"
+          />
+        </div>
 
-      <div class="filter-age">
-        <input
-          class="filter-age__input filter"
-          id="filter-age-min"
-          type="number"
-          min="0"
-        />
-        <span class="filter-age__divider"></span>
-        <input
-          class="filter-age__input filter"
-          id="filter-age-max"
-          type="number"
-          min="0"
-        />
-      </div>
+        <div class="filter-age">
+          <input
+            class="filter-age__input filter"
+            id="filter-age-min"
+            form="filters-block"
+            name="age-min"
+            type="number"
+            min="0"
+          />
+          <span class="filter-age__divider"></span>
+          <input
+            class="filter-age__input filter"
+            id="filter-age-max"
+            name="age-max"
+            type="number"
+            min="0"
+          />
+        </div>
 
-      <div class="filter-sex">
-        <button class="filter-sex__input filter button" id="filter-sex"></button>
-      </div>
+        <div class="filter-sex">
+          <button
+            type="button"
+            form="filters-block"
+            class="filter-sex__input filter button"
+            id="filter-sex"
+            name="sex"
+          ></button>
+        </div>
 
-      <div class="sort-age">
-        <button class="sort-age__input filter button" id="sort-age"></button>
-      </div>
+        <div class="sort-age">
+          <button
+            type="button"
+            class="sort-age__input filter button"
+            id="sort-age"
+            name="sort-age"
+          ></button>
+        </div>
 
-      <div class="sort-name">
-        <button class="sort-name__input filter button" id="sort-name"></button>
-      </div>
+        <div class="sort-name">
+          <button
+            type="button"
+            class="sort-name__input filter button"
+            id="sort-name"
+            name="sort-name"
+          ></button>
+        </div>
 
-      <button class="reset-filters button" id="reset-filters" value="reset" disabled></button>
-    </form>
+        <button
+          class="reset-filters button"
+          type="reset"
+          id="reset-filters"
+          value="reset"
+          disabled
+        ></button>
+      </form>
     </aside>
 
     <main>
